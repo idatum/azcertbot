@@ -10,3 +10,9 @@ echo _acme-challenge.$subname $zone
 
 # Delete the record set.
 az network dns record-set txt delete --yes --resource-group lab --zone-name $zone --name _acme-challenge.$subname
+
+# Any custom post actions
+if [ -f ./custom_post_action.sh ]
+then
+    env sh custom_post_action.sh
+fi

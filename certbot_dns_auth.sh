@@ -11,6 +11,7 @@ zone=`echo $domain_split | cut -d ' ' -f 2`
 echo _acme-challenge.$subname $zone
 
 # Create the record set for the zone.
+# TODO: currently az return code is always 0; check when this bug is fixed.
 az network dns record-set txt create --resource-group lab --zone-name $zone --name _acme-challenge.$subname --ttl 15
 az network dns record-set txt add-record --resource-group lab --zone-name $zone --record-set-name _acme-challenge.$subname --value ${CERTBOT_VALIDATION}
 
