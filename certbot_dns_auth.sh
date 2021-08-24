@@ -8,12 +8,19 @@
 domain_split=`echo ${CERTBOT_DOMAIN} | awk -f ./split_domain.awk`
 subname=`echo $domain_split | cut -d ' ' -f 1`
 zone=`echo $domain_split | cut -d ' ' -f 2` 
-echo _acme-challenge.$subname $zone
+if [ "${subname}" = "${zone}" ]
+then
+    # No subname
+    txtname="_acme-challenge"
+else
+    txtname="_acme-challenge.$subname"
+fi
+echo $txtname $zone
 
 # Create the record set for the zone.
 # TODO: currently az return code is always 0; check when this bug is fixed.
-az network dns record-set txt create --resource-group lab --zone-name $zone --name _acme-challenge.$subname --ttl 15
-az network dns record-set txt add-record --resource-group lab --zone-name $zone --record-set-name _acme-challenge.$subname --value ${CERTBOT_VALIDATION}
+az network dns record-set txt create --resource-group lab --zone-name $zone --name $txtname --ttl 15
+az network dns record-set txt add-record --resource-group lab --zone-name $zone --record-set-name $txtname --value ${CERTBOT_VALIDATION}
 
 # Give time for DNS to propagate.
 sleep 60
