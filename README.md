@@ -8,4 +8,4 @@ Requirements:
 
 Usage:
 
-`sh renew_cert.sh www.example.com`
+`sh renew_cert.sh example.com,www.example.com`

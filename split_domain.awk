@@ -3,18 +3,25 @@
 #         output: www.east example.com
 
 BEGIN {
-  FS = "."
+    RS = " ";
+    FS = ".";
 }
 {
-  # subname
-  for (n = NF - 1; n >= 2; n--) {
-    if (n < NF - 1) {
-      printf "."
+    if (NF < 2) {
+        printf "Invalid domain: %s\n", $0;
+        exit 2;
     }
-    printf "%s", $(NF - n)
-  }
-  # zone
-  printf " %s.%s", $(NF - 1), $(NF)
- 
-  print ""
+    # subname
+    for (n = NF - 1; n >= 2; --n) {
+        if (n < NF - 1) {
+            printf FS;
+        }
+        printf $(NF - n);
+    }
+    if (NF > 2) {
+        printf " ";
+    }
+    # zone
+    zone = sprintf ("%s%s%s", $(NF - 1), FS, $NF);
+    printf zone;
 }

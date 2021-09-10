@@ -1,11 +1,12 @@
 #!/usr/bin/env sh
 
-# Usage: sh renew_certbot.sh www.example.com [--dry-run]
+# Usage: sh renew_certbot.sh www.example.com[,example.com,...] [--dry-run]
 
-domain=$1
-if [ -d $domain ]
+domains=$1
+if [ ! $domains ]
 then
-    echo "Full domain name required (e.g. www.example.com)"
+    echo "One or more full domain names required."
+    echo "Usage: sh renew_certbot.sh www.example.com[,example.com,...] [--dry-run]"
     exit 2
 fi
 
@@ -20,9 +21,11 @@ then
     echo === dry run ===
 fi
 
+domain_params=`echo $domains | awk -f ./domain_params.awk`
+
 certbot certonly \
             $dryrun \
-            -d $domain \
+            $domain_params \
             --non-interactive --manual-public-ip-logging-ok --agree-tos --manual \
             --preferred-challenges=dns \
             --manual-auth-hook ./certbot_dns_auth.sh \
