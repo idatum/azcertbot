@@ -26,7 +26,7 @@ domain_params=`echo $domains | awk -f ./domain_params.awk`
 certbot certonly \
             $dryrun \
             $domain_params \
-            --non-interactive --manual-public-ip-logging-ok --agree-tos --manual \
+            --non-interactive --agree-tos --manual \
             --preferred-challenges=dns \
             --manual-auth-hook ./certbot_dns_auth.sh \
             --manual-cleanup-hook ./certbot_dns_cleanup.sh
